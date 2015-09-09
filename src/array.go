@@ -120,7 +120,7 @@ import (
 //func main() {
 //	a := [...]int{5, 2, 9, 11, 3}
 //	item := len(a)
-//	for i := 0; i < item; i++ {
+//	for i := 0; i < item;
 //		for j := i + 1; j < item; j++ {
 //			if a[i] < a[j] {
 //				temp := a[i]
