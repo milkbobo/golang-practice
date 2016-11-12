@@ -22,7 +22,7 @@ func main() {
 
 	//增
 	for index := 0; index < 10; index++ {
-		firstData, lastOneData, err = add(firstData, lastOneData, index)
+		firstData, lastOneData, err = Add(firstData, lastOneData, index)
 		if err != nil {
 			panic(err)
 		}
@@ -134,7 +134,7 @@ func Find(data Node, findNum int) (*Node, error) {
 
 // //增加方法
 // //among 放在第几个后面
-// func add(data *Node, addNum int, among int) error {
+// func Add(data *Node, addNum int, among int) error {
 // 	nowData := data
 // 	nums := 1
 // 	// lastData := &Node{}
@@ -166,7 +166,7 @@ func Find(data Node, findNum int) (*Node, error) {
 // }
 
 //增加方法
-func add(firstData *Node, lastOneData *Node, addNum int) (*Node, *Node, error) {
+func Add(firstData *Node, lastOneData *Node, addNum int) (*Node, *Node, error) {
 
 	// fmt.Printf("%+v", firstData)
 
