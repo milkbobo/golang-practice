@@ -13,28 +13,37 @@ func main() {
 	BlockingSynchronization()
 	blockingSynchronizationTime := time.Now()
 
-	NonBlockingSynchronization()
+	// NonBlockingSynchronization()
+	NonBlockingSynchronization2()
 	nonBlockingSynchronizationTime := time.Now()
 
-	BlockingAsynchronous()
-	blockingAsynchronousTime := time.Now()
+	// BlockingAsynchronous()
+	// blockingAsynchronousTime := time.Now()
+	//
+	// NonBlockingAsynchronous()
+	// nonBlockingAsynchronousTime := time.Now()
 
-	NonBlockingAsynchronous()
-	nonBlockingAsynchronousTime := time.Now()
+	// fmt.Printf("同步阻塞:%+v\n", time.Duration(blockingSynchronizationTime.UnixNano()-startTime.UnixNano()))
+	//
+	// fmt.Printf("同步非阻塞:%+v\n", time.Duration(nonBlockingSynchronizationTime.UnixNano()-blockingSynchronizationTime.UnixNano()))
 
-	fmt.Printf("同步阻塞:%+v\n", time.Duration(blockingSynchronizationTime.UnixNano()-startTime.UnixNano()))
-
-	fmt.Printf("同步非阻塞:%+v\n", time.Duration(nonBlockingSynchronizationTime.UnixNano()-blockingSynchronizationTime.UnixNano()))
-
-	fmt.Printf("异步阻塞:%+v\n", time.Duration(blockingAsynchronousTime.UnixNano()-nonBlockingSynchronizationTime.UnixNano()))
-
-	fmt.Printf("异步非阻塞:%+v\n", time.Duration(nonBlockingAsynchronousTime.UnixNano()-blockingAsynchronousTime.UnixNano()))
+	// fmt.Printf("异步阻塞:%+v\n", time.Duration(blockingAsynchronousTime.UnixNano()-nonBlockingSynchronizationTime.UnixNano()))
+	//
+	// fmt.Printf("异步非阻塞:%+v\n", time.Duration(nonBlockingAsynchronousTime.UnixNano()-blockingAsynchronousTime.UnixNano()))
 
 }
 
 //煲水
 func heatWater() {
 	time.Sleep(10 * time.Millisecond)
+}
+
+var xiang3 = make(chan int)
+
+func heatWater4() {
+	time.Sleep(10 * time.Millisecond)
+	xiang3 <- 1
+	println("ok")
 }
 
 //计算数学题 1加到100
@@ -62,33 +71,56 @@ func BlockingSynchronization() {
 }
 
 //同步非阻塞
-func NonBlockingSynchronization() {
-
-	go func() {
-		for index := 0; index < 100; index++ {
-			taoge()
-			<-xiang
-		}
-	}()
-
-	var num *int
-	temp := 1
-	num = &temp
-
-	for index := 1; index < 100; index++ {
-		count(num)
+func calculate() {
+	k := 0
+	for index := 0; index < 100; index++ {
+		k++
 	}
-	<-ok
-	fmt.Printf("结果结果%+v\n", *num)
+	fmt.Printf("结果结果%+v\n", k)
 }
 
-//异步阻塞
+func NonBlockingSynchronization2() {
+
+	go heatWater4()
+
+	for {
+		select {
+		case <-xiang3:
+			return
+		default:
+			calculate()
+		}
+	}
+}
+
+// //同步非阻塞
+// func NonBlockingSynchronization() {
+//
+// 	go func() {
+// 		for index := 0; index < 100; index++ {
+// 			taoge()
+// 			<-xiang
+// 		}
+// 	}()
+//
+// 	var num *int
+// 	temp := 1
+// 	num = &temp
+//
+// 	for index := 1; index < 100; index++ {
+// 		count(num)
+// 	}
+// 	<-ok
+// 	fmt.Printf("结果结果%+v\n", *num)
+// }
+
+//异步非阻塞
 //涛哥伟哥两个人一起煲水
 //目标一个100壶水
 var mubiao = 100
 
 //现在已煲数量
-var xianzai = 0
+var nowNums = 0
 
 //第一壶水的响声
 var xiang = make(chan int, 1)
@@ -121,11 +153,12 @@ func taoge() {
 	go heatWater1()
 
 	<-xiang
-	if mubiao != xianzai {
-		xianzai++
+	if mubiao != nowNums {
+		nowNums++
 		go taoge()
 	} else {
-		ok <- 1
+		// ok <- 1
+		finish = true
 	}
 
 }
@@ -135,28 +168,31 @@ func weige() {
 	go heatWater2()
 
 	<-xiang2
-	if mubiao != xianzai {
-		xianzai++
+	if mubiao != nowNums {
+		nowNums++
 		go weige()
 	} else {
-		ok2 <- 1
+		// ok2 <- 1
+		finish = true
 	}
 
 }
 
 //运行方法
-func BlockingAsynchronous() {
-	xianzai = 0
+var finish bool
+
+func NonBlockingAsynchronous() {
+	nowNums = 0
 	go taoge()
 	go weige()
 
-	<-ok
-	<-ok2
-	fmt.Printf("煲水:%+v\n", xianzai)
+	// <-ok
+	// <-ok2
+	// fmt.Printf("煲水:%+v\n", nowNums)
 
 }
 
-//异步非阻塞
+//异步阻塞
 var num3 = 0
 
 func heatWater3() {
@@ -164,26 +200,23 @@ func heatWater3() {
 	num3++
 }
 
-func NonBlockingAsynchronous() {
-	for index := 0; index < 100; index++ {
-		go heatWater3()
-	}
+var xiang6 = make(chan int, 1)
+var xiang7 = make(chan int, 1)
 
-	// var num *int
-	// temp := 1
-	// num = &temp
-	//
-	// for index := 1; index < 100; index++ {
-	// 	go count(num)
-	// }
+func taoge2() {
+	time.Sleep(time.Second)
+	xiang6 <- 1
+}
 
-	for {
-		if num3 == 100 {
-			break
-		}
-	}
-	// runtime.Gosched()
-	// time.Sleep(time.Second)
-	// fmt.Printf("结果结果%+v\n", *num)
-	fmt.Printf("结果结果%+v\n", num3)
+func weige2() {
+	time.Sleep(time.Second)
+	xiang7 <- 1
+}
+
+func BlockingAsynchronous() {
+	nowNums = 0
+	go taoge2()
+	<-xiang6
+	go weige2()
+	<-xiang7
 }
